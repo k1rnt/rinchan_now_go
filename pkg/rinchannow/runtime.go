@@ -34,29 +34,9 @@ func (r *RinchanRuntime) Now(code string) {
 		case string(getchar):
 			r.getchar()
 		case string(loopstart):
-			if r.memory[r.pointer] == 0 {
-				loop := 1
-				for loop > 0 {
-					i++
-					if c[i] == string(loopstart) {
-						loop++
-					} else if c[i] == string(loopend) {
-						loop--
-					}
-				}
-			}
+			r.loopstart(c, &i)
 		case string(loopend):
-			if r.memory[r.pointer] != 0 {
-				loop := 1
-				for loop > 0 {
-					i--
-					if c[i] == string(loopstart) {
-						loop--
-					} else if c[i] == string(loopend) {
-						loop++
-					}
-				}
-			}
+			r.loopend(c, &i)
 		}
 	}
 }
@@ -85,5 +65,33 @@ func (r *RinchanRuntime) getchar() {
 	_, err := fmt.Scanf("%c", &r.memory[r.pointer])
 	if err != nil {
 		return
+	}
+}
+
+func (r *RinchanRuntime) loopstart(c []string, i *int) {
+	if r.memory[r.pointer] == 0 {
+		loop := 1
+		for loop > 0 {
+			*i++
+			if c[*i] == string(loopstart) {
+				loop++
+			} else if c[*i] == string(loopend) {
+				loop--
+			}
+		}
+	}
+}
+
+func (r *RinchanRuntime) loopend(c []string, i *int) {
+	if r.memory[r.pointer] != 0 {
+		loop := 1
+		for loop > 0 {
+			*i--
+			if c[*i] == string(loopstart) {
+				loop--
+			} else if c[*i] == string(loopend) {
+				loop++
+			}
+		}
 	}
 }
